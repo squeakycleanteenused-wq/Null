@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { buyList, retire, uid } from '../logic'
+import { SHOPS, itemQuery } from '../shops'
 import type { Props } from './types'
 
 export default function Shopping({ state, update }: Props) {
@@ -22,6 +23,13 @@ export default function Shopping({ state, update }: Props) {
               </strong>
               <div className="muted small">
                 {[item.color, item.brand, item.size && `suurus ${item.size}`].filter(Boolean).join(' · ') || 'Lisa mark ja suurus garderoobi lehel'}
+              </div>
+              <div className="row wrap" style={{ marginTop: 8 }}>
+                {SHOPS.map((s) => (
+                  <a key={s.id} className="btn small" href={s.search(itemQuery(item, state.gender))} target="_blank" rel="noopener noreferrer">
+                    Osta: {s.name} ↗
+                  </a>
+                ))}
               </div>
             </li>
           ))}

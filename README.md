@@ -9,7 +9,8 @@ Töötab telefonis ja veebis (PWA, installitav avaekraanile) ja ka ilma netita. 
 - **Täna:** näitab, mida selga panna. Üks nupp: "Panin selga". Streak loeb päevi ilma riiete üle mõtlemata.
 - **Vormid:** nt "Tavaline päev" ja "Külm päev". Vormi saab hommikul ühe puudutusega vahetada.
 - **Pesu:** kantud tükid lähevad pesukorvi, "Pesin kõik" toob need tagasi. Kui puhast pole, äpp ütleb seda.
-- **Ost:** kulunud tükist alates koostab nimekirja, koos värvi, margi ja suurusega, et osta täpselt sama.
+- **Nimekiri:** kulunud tükist alates koostab ostunimekirja, koos margi ja suurusega, ja "Osta" nupud viivad otse poodi.
+- **Pood:** kapslisse sobivad põhitükid (valge T-särk, mustad püksid jne) ja otsingulingid Zalandosse ja About Yousse. Tellimine käib poes. Poodide aadressid on failis `src/shops.ts`.
 - **Varukoopia:** eksport/import JSON-ina.
 
 ## Käivitamine

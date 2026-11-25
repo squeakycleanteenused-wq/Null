@@ -27,6 +27,7 @@ export type State = {
   log: LogEntry[]
   notes: ShoppingNote[]
   started: boolean
+  gender: 'naised' | 'mehed'
   version: 1
 }
 
@@ -45,6 +46,7 @@ export const emptyState = (): State => ({
   log: [],
   notes: [],
   started: false,
+  gender: 'naised',
   version: 1,
 })
 

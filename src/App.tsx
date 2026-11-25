@@ -5,14 +5,16 @@ import Today from './pages/Today'
 import Wardrobe from './pages/Wardrobe'
 import Laundry from './pages/Laundry'
 import Shopping from './pages/Shopping'
+import Shop from './pages/Shop'
 
-type Tab = 'today' | 'wardrobe' | 'laundry' | 'shopping'
+type Tab = 'today' | 'wardrobe' | 'laundry' | 'shopping' | 'shop'
 
 const TABS: { id: Tab; label: string; icon: string }[] = [
   { id: 'today', label: 'Täna', icon: '☀️' },
   { id: 'wardrobe', label: 'Garderoob', icon: '👕' },
   { id: 'laundry', label: 'Pesu', icon: '🧺' },
-  { id: 'shopping', label: 'Ost', icon: '🛍️' },
+  { id: 'shopping', label: 'Nimekiri', icon: '📝' },
+  { id: 'shop', label: 'Pood', icon: '🛍️' },
 ]
 
 export default function App() {
@@ -49,6 +51,7 @@ export default function App() {
         {tab === 'wardrobe' && <Wardrobe state={state} update={update} replace={replace} />}
         {tab === 'laundry' && <Laundry state={state} update={update} />}
         {tab === 'shopping' && <Shopping state={state} update={update} />}
+        {tab === 'shop' && <Shop state={state} update={update} />}
       </main>
       <nav className="tabs" aria-label="Peamenüü">
         {TABS.map((t) => (

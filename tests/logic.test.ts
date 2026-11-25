@@ -58,3 +58,17 @@ describe('kapsli loogika', () => {
     expect(streak(s, new Date(2026, 2, 13))).toBe(0)
   })
 })
+
+import { SHOPS, itemQuery } from '../src/shops'
+
+describe('poe lingid', () => {
+  it('kodeerib otsingu õigesti ja viib Eesti poodidesse', () => {
+    const q = itemQuery({ name: 'Valge T-särk', brand: 'Gap', color: 'valge' }, 'mehed')
+    expect(q).toBe('meeste Gap Valge T-särk')
+    for (const s of SHOPS) {
+      const url = new URL(s.search(q))
+      expect(url.hostname).toMatch(/\.ee$/)
+      expect(decodeURIComponent(url.search)).toContain('T-särk')
+    }
+  })
+})
