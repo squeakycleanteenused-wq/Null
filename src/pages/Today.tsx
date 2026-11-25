@@ -59,7 +59,7 @@ export default function Today({ state, update, goTo }: Props & { goTo: (t: 'laun
           </button>
         ) : missing.length > 0 ? (
           <>
-            <p className="bad">Puhast pole: {missing.map((m) => m.name).join(', ')}.</p>
+            <p className="bad">Puhast pole: {missing.map((m) => m.name).join(', ')}. Pese või kontrolli kogust garderoobis.</p>
             <button className="btn primary big" onClick={() => goTo('laundry')}>Mine pesu juurde</button>
           </>
         ) : (

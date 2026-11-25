@@ -1,5 +1,5 @@
-import { PRESETS, SHOPS, itemQuery, presetQuery, type Gender, type Preset } from '../shops'
-import { ROLE_LABELS, uid, type Item } from '../logic'
+import { KITS, PRESETS, SHOPS, itemQuery, presetQuery, type Gender, type Kit, type Preset } from '../shops'
+import { ROLE_LABELS, uid, type Item, type State } from '../logic'
 import type { Props } from './types'
 
 const GENDERS: { id: Gender; label: string }[] = [
@@ -19,13 +19,34 @@ function ShopLinks({ query }: { query: string }) {
   )
 }
 
+const makeItem = (p: Preset): Item => ({
+  id: uid(), name: p.title, role: p.role, color: p.color, brand: '', size: '', clean: 0, dirty: 0, target: p.noWash ? 1 : 3, noWash: p.noWash,
+})
+
+/** Lisa komplekti puuduvad tükid ja vormid; olemasolevaid ei dubleeri. */
+export function addKit(s: State, kit: Kit): State {
+  const items = [...s.items]
+  const idFor = (pid: string) => {
+    const p = PRESETS.find((x) => x.id === pid)!
+    let found = items.find((i) => i.name.toLowerCase() === p.title.toLowerCase())
+    if (!found) {
+      found = makeItem(p)
+      items.push(found)
+    }
+    return found.id
+  }
+  kit.presetIds.forEach(idFor)
+  const uniforms = [...s.uniforms]
+  for (const u of kit.uniforms) {
+    if (uniforms.some((x) => x.name.toLowerCase() === u.name.toLowerCase())) continue
+    uniforms.push({ id: uid(), name: u.name, itemIds: u.presetIds.map(idFor) })
+  }
+  return { ...s, items, uniforms, activeUniformId: s.activeUniformId ?? uniforms[0]?.id ?? null }
+}
+
 export default function Shop({ state, update }: Props) {
   const have = new Set(state.items.map((i) => i.name.toLowerCase()))
-  const addPreset = (p: Preset) =>
-    update((s) => {
-      const item: Item = { id: uid(), name: p.title, role: p.role, color: p.color, brand: '', size: '', clean: 0, dirty: 0, target: 3 }
-      return { ...s, items: [...s.items, item] }
-    })
+  const addPreset = (p: Preset) => update((s) => ({ ...s, items: [...s.items, makeItem(p)] }))
 
   return (
     <>
@@ -41,6 +62,20 @@ export default function Shop({ state, update }: Props) {
           </button>
         ))}
       </div>
+
+      <h2>Valmis komplektid</h2>
+      <ul className="list">
+        {KITS.map((k) => (
+          <li key={k.id} className="card">
+            <strong>{k.title}</strong>
+            <div className="muted small">{k.blurb}</div>
+            <div className="muted small">{k.uniforms.map((u) => u.name).join(' · ')}</div>
+            <button className="btn small primary" style={{ marginTop: 8 }} onClick={() => update((s) => addKit(s, k))}>
+              Lisa komplekt garderoobi
+            </button>
+          </li>
+        ))}
+      </ul>
 
       <h2>Põhitükid</h2>
       <ul className="list">

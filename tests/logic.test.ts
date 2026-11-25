@@ -72,3 +72,29 @@ describe('poe lingid', () => {
     }
   })
 })
+
+import { addKit } from '../src/pages/Shop'
+import { KITS, PRESETS } from '../src/shops'
+import { emptyState } from '../src/logic'
+
+describe('komplektid', () => {
+  it('kõik komplekti viited on olemas ja kordus ei dubleeri', () => {
+    for (const k of KITS) {
+      const ids = [...k.presetIds, ...k.uniforms.flatMap((u) => u.presetIds)]
+      for (const id of ids) expect(PRESETS.some((p) => p.id === id)).toBe(true)
+      const once = addKit(emptyState(), k)
+      const twice = addKit(once, k)
+      expect(twice.items).toHaveLength(once.items.length)
+      expect(twice.uniforms).toHaveLength(k.uniforms.length)
+    }
+  })
+
+  it('jalats ei lähe kandmisega pessu', () => {
+    const s = addKit(emptyState(), KITS[0])
+    s.items.forEach((i) => { if (!i.noWash) i.clean = 3 })
+    const next = wear(s, s.uniforms[0].id, day)
+    const shoes = next.items.find((i) => i.name === 'Valged tossud')!
+    expect(shoes.dirty).toBe(0)
+    expect(next.items.find((i) => i.name === 'Valge T-särk')!.dirty).toBe(1)
+  })
+})

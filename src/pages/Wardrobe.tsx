@@ -112,6 +112,10 @@ export default function Wardrobe({ state, update, replace }: Props & { replace: 
             <label>Puhast praegu<input type="number" min={0} value={item.clean} onChange={(e) => setItem({ ...item, clean: Math.max(0, +e.target.value || 0) })} /></label>
             <label>Soovitud kokku<input type="number" min={1} value={item.target} onChange={(e) => setItem({ ...item, target: Math.max(1, +e.target.value || 1) })} /></label>
           </div>
+          <label className="check">
+            <input type="checkbox" checked={!!item.noWash} onChange={(e) => setItem({ ...item, noWash: e.target.checked })} />{' '}
+            Ei vaja pesemist iga kandmise järel (jalats, jope)
+          </label>
           <div className="row">
             <button className="btn primary">Salvesta</button>
             <button type="button" className="btn" onClick={() => setItem(null)}>Katkesta</button>

@@ -12,6 +12,7 @@ export type Item = {
   clean: number // puhtad tükid
   dirty: number // pesu ootavad tükid
   target: number // mitu tükki tahad alati omada
+  noWash?: boolean // jalatsid, jope jms: ei lähe iga kandmisega pessu
 }
 
 export type Uniform = { id: string; name: string; itemIds: string[] }
@@ -77,7 +78,7 @@ export function uniformItems(s: State, u: Uniform): Item[] {
 
 /** Millised vormi osad on praegu puhtalt otsas. */
 export function missingClean(s: State, u: Uniform): Item[] {
-  return uniformItems(s, u).filter((i) => i.clean < 1)
+  return uniformItems(s, u).filter((i) => !i.noWash && i.clean < 1)
 }
 
 /** Märgi täna selle vormi kandmine: iga osa läheb puhtast pesu ootele. */
@@ -87,7 +88,7 @@ export function wear(s: State, uniformId: string, date = todayStr()): State {
   const ids = new Set(u.itemIds)
   return {
     ...s,
-    items: s.items.map((i) => (ids.has(i.id) ? { ...i, clean: i.clean - 1, dirty: i.dirty + 1 } : i)),
+    items: s.items.map((i) => (ids.has(i.id) && !i.noWash ? { ...i, clean: i.clean - 1, dirty: i.dirty + 1 } : i)),
     log: [...s.log, { date, uniformId }],
   }
 }
@@ -100,7 +101,7 @@ export function undoWear(s: State, date = todayStr()): State {
   const ids = new Set(u?.itemIds ?? [])
   return {
     ...s,
-    items: s.items.map((i) => (ids.has(i.id) && i.dirty > 0 ? { ...i, clean: i.clean + 1, dirty: i.dirty - 1 } : i)),
+    items: s.items.map((i) => (ids.has(i.id) && !i.noWash && i.dirty > 0 ? { ...i, clean: i.clean + 1, dirty: i.dirty - 1 } : i)),
     log: s.log.filter((l) => l !== entry),
   }
 }
